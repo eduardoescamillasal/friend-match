@@ -3,15 +3,20 @@ import { Button, Card, CardBody, CardHeader, Input } from "@heroui/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { GiPadlock } from "react-icons/gi";
+import { loginSchema, LoginSchema } from "@/lib/schemas/loginSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function LoginForm() {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm();
+  } = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+    mode: "onTouched",
+  });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: LoginSchema) => {
     console.log(data);
   };
 
@@ -32,7 +37,7 @@ export default function LoginForm() {
             <Input
               label="Email"
               variant="bordered"
-              {...register("email", { required: "Email is required" })}
+              {...register("email")}
               isInvalid={!!errors.email}
               errorMessage={errors.email?.message as string}
               defaultValue=""
@@ -41,7 +46,7 @@ export default function LoginForm() {
               label="Password"
               variant="bordered"
               type="password"
-              {...register("password", { required: "Password is required" })}
+              {...register("password")}
               defaultValue=""
               isInvalid={!!errors.password}
               errorMessage={errors.password?.message as string}
