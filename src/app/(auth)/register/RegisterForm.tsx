@@ -1,9 +1,10 @@
 "use client";
+import React from "react";
+
 import { registerSchema, RegisterSchema } from "@/lib/schemas/registerSchema";
 import { Card, CardHeader, CardBody, Button, Input } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import React from "react";
 import { useForm } from "react-hook-form";
 import { GiPadlock } from "react-icons/gi";
 
