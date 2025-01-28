@@ -30,6 +30,8 @@ export async function signInUser(
         default:
           return { status: "error", error: "Something went wrong" };
       }
+    } else {
+      return { status: "error", error: "Something else went wrong" };
     }
   }
 }
