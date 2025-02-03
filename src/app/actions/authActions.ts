@@ -8,7 +8,7 @@ import { User } from "@prisma/client";
 import { LoginSchema } from "@/lib/schemas/loginSchema";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
-import { signOut } from "next-auth/react";
+import { signOut } from "@/auth";
 
 export async function signInUser(
   data: LoginSchema
