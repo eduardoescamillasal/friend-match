@@ -1,5 +1,6 @@
 "use client";
-import { signOut } from "@/auth";
+import { signOutUser } from "@/app/actions/authActions";
+
 import {
   Avatar,
   Dropdown,
@@ -44,7 +45,7 @@ export default function UserMenu({ user }: Props) {
         <DropdownItem as={Link} href="/members/edit">
           Edit profile
         </DropdownItem>
-        <DropdownItem color="danger" onClick={async () => signOut()}>
+        <DropdownItem color="danger" onClick={async () => signOutUser()}>
           Log out
         </DropdownItem>
       </DropdownMenu>
