@@ -12,7 +12,7 @@ export default function MemberCard({ member }: Props) {
   return (
     <Card fullWidth as={Link} href={`/members/${member.userId}`} isPressable>
       <Image
-        isZoomed
+        isZoomed={true}
         alt={member.name}
         width={300}
         src={member.image || "/images/user.png"}

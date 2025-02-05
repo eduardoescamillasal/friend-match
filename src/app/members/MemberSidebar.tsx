@@ -37,7 +37,7 @@ export default function MemberSidebar({ member }: Props) {
         alt="User profile main image"
         className="rounded-full mt-6 aspect-square object-cover"
       />
-      <CardBody>
+      <CardBody className="overflow-hidden">
         <div className="flex flex-col items-center">
           <div className="text-2xl">
             {member.name}, {calculateAge(member.dateOfBirth)}
