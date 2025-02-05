@@ -34,4 +34,82 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
 # friend-match
+
+# User
+
+```plantuml
+@startuml
+    skinparam backgroundColor #EEEBDC
+    skinparam handwritten true
+
+
+
+class Account {
+  +id: String
+  +userId: String
+  +type: String
+  +provider: String
+  +providerAccountId: String
+  +refresh_token: String?
+  +access_token: String?
+  +expires_at: Int?
+  +token_type: String?
+  +scope: String?
+  +id_token: String?
+  +session_state: String?
+  +createdAt: DateTime
+  +updatedAt: DateTime
+}
+
+class User {
+  +id: String
+  +name: String?
+  +email: String?
+  +emailVerified: DateTime?
+  +passwordHash: String
+  +image: String?
+}
+
+class Member {
+  +id: String
+  +userId: String
+  +name: String
+  +gender: String
+  +dateOfBirth: DateTime
+  +created: DateTime
+  +updated: DateTime
+  +description: String
+  +city: String
+  +country: String
+  +image: String?
+}
+
+class Photo {
+  +id: String
+  +url: String
+  +publicId: String?
+  +memberId: String
+}
+
+class Like {
+  +sourceUserId: String
+  +targetUserId: String
+}
+
+User "1" -- "*" Account : has
+User "1" -- "0..1" Member : has
+
+Member "1" -- "*" Photo : has
+Member "1" -- "*" Like : "sourceLikes"
+Member "1" -- "*" Like : "targetLikes"
+
+Account "*" -- "1" User : belongs_to
+Member "1" -- "1" User : belongs_to
+Photo "*" -- "1" Member : belongs_to
+Like "*" -- "1" Member : "sourceMember"
+Like "*" -- "1" Member : "targetMember"
+
+@enduml
+```
