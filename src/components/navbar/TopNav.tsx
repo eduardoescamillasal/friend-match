@@ -29,7 +29,7 @@ export default async function TopNav() {
         </div>
       </NavbarBrand>
       <NavbarContent justify="center">
-        <NavLink href="/members" label="Members" />
+        <NavLink href="/members" label="Friends" />
         <NavLink href="/lists" label="Lists" />
         <NavLink href="/messages" label="Messages" />
       </NavbarContent>
