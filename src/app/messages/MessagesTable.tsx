@@ -67,7 +67,15 @@ export default function MessagesTable({ messages }: Props) {
           {(item) => (
             <TableRow key={item.id} className="cursor-pointer">
               {(columnKey) => (
-                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                <TableCell>
+                  <div
+                    className={`${
+                      !item.dateRead && !isOutbox ? "font-semibold" : ""
+                    }`}
+                  >
+                    {getKeyValue(item, columnKey)}
+                  </div>
+                </TableCell>
               )}
             </TableRow>
           )}
