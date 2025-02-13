@@ -2,8 +2,9 @@
 
 import { MessageDto } from "@/types";
 import {
+  Avatar,
+  Button,
   Card,
-  getKeyValue,
   Table,
   TableBody,
   TableCell,
@@ -13,7 +14,8 @@ import {
 } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import React, { Key } from "react";
+import React, { Key, useCallback } from "react";
+import { AiFillDelete } from "react-icons/ai";
 
 type Props = {
   messages: MessageDto[];
@@ -37,6 +39,10 @@ export default function MessagesTable({ messages }: Props) {
       key: "created",
       label: isOutbox ? "Date sent" : "Date received",
     },
+    {
+      key: "actions",
+      label: "Actions",
+    },
   ];
 
   const handleRowSelect = (key: Key) => {
@@ -46,6 +52,43 @@ export default function MessagesTable({ messages }: Props) {
       : `/members/${message?.senderId}`;
     router.push(url + "/chat");
   };
+
+  const renderCell = useCallback(
+    (item: MessageDto, columnKey: keyof MessageDto) => {
+      const cellValue = item[columnKey];
+      switch (columnKey) {
+        case "recipientName":
+        case "senderName":
+          return (
+            <div
+              className={`flex items-center gap-2 cursor-pointer ${
+                !item.dateRead && !isOutbox ? "font-semibold" : ""
+              }`}
+            >
+              <Avatar
+                alt="Image of member"
+                src={
+                  (isOutbox ? item.recipientImage : item.senderImage) ||
+                  "/images/user.png"
+                }
+              />
+              <span>{cellValue}</span>
+            </div>
+          );
+        case "text":
+          return <div className="truncate">{cellValue}</div>;
+        case "created":
+          return cellValue;
+        default:
+          return (
+            <Button isIconOnly variant="light">
+              <AiFillDelete size={24} className="text-danger" />
+            </Button>
+          );
+      }
+    },
+    [isOutbox]
+  );
 
   return (
     <Card className="flex flex-col gap-3 h-[80vh] overflow-auto">
@@ -73,7 +116,7 @@ export default function MessagesTable({ messages }: Props) {
                       !item.dateRead && !isOutbox ? "font-semibold" : ""
                     }`}
                   >
-                    {getKeyValue(item, columnKey)}
+                    {renderCell(item, columnKey as keyof MessageDto)}
                   </div>
                 </TableCell>
               )}
