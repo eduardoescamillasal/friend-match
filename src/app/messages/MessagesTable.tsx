@@ -14,8 +14,10 @@ import {
 } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import React, { Key, useCallback } from "react";
+import React, { Key, useCallback, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
+import { deleteMessage } from "../actions/messageActions";
+import { truncateString } from "@/lib/util";
 
 type Props = {
   messages: MessageDto[];
@@ -25,6 +27,7 @@ export default function MessagesTable({ messages }: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const isOutbox = searchParams.get("container") === "outbox";
+  const [isDeleting, setIsDeleting] = useState({ id: "", loading: false });
 
   const columns = [
     {
@@ -44,6 +47,16 @@ export default function MessagesTable({ messages }: Props) {
       label: "Actions",
     },
   ];
+
+  const handleDeleteMessage = useCallback(
+    async (message: MessageDto) => {
+      setIsDeleting({ id: message.id, loading: true });
+      await deleteMessage(message.id, isOutbox);
+      router.refresh();
+      setIsDeleting({ id: "", loading: false });
+    },
+    [isOutbox, router]
+  );
 
   const handleRowSelect = (key: Key) => {
     const message = messages.find((m) => m.id === key);
@@ -72,18 +85,23 @@ export default function MessagesTable({ messages }: Props) {
             </div>
           );
         case "text":
-          return <div className="truncate">{cellValue}</div>;
+          return <div>{truncateString(cellValue, 80)}</div>;
         case "created":
           return cellValue;
         default:
           return (
-            <Button isIconOnly variant="light">
+            <Button
+              isIconOnly
+              variant="light"
+              onClick={() => handleDeleteMessage(item)}
+              isLoading={isDeleting.id === item.id && isDeleting.loading}
+            >
               <AiFillDelete size={24} className="text-danger" />
             </Button>
           );
       }
     },
-    [isOutbox]
+    [isOutbox, isDeleting.id, isDeleting.loading, handleDeleteMessage]
   );
 
   return (
@@ -96,7 +114,12 @@ export default function MessagesTable({ messages }: Props) {
       >
         <TableHeader columns={columns}>
           {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
+            <TableColumn
+              key={column.key}
+              width={column.key === "text" ? "50%" : undefined}
+            >
+              {column.label}
+            </TableColumn>
           )}
         </TableHeader>
         <TableBody
