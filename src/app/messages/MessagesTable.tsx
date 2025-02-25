@@ -17,12 +17,12 @@ import MessagesTableCell from "./MessagesTableCell";
 import { useMessages } from "@/hooks/useMessages";
 
 type Props = {
-  messages: MessageDto[];
+  initialMessages: MessageDto[];
 };
 
-export default function MessagesTable({ messages }: Props) {
-  const { columns, isOutbox, isDeleting, deleteMessage, selectRow } =
-    useMessages(messages);
+export default function MessagesTable({ initialMessages }: Props) {
+  const { columns, isOutbox, isDeleting, deleteMessage, selectRow, messages } =
+    useMessages(initialMessages);
   return (
     <Card className="flex flex-col gap-3 h-[80vh] overflow-auto">
       <Table
