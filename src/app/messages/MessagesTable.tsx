@@ -18,6 +18,7 @@ import { AiFillDelete } from "react-icons/ai";
 import { deleteMessage } from "../actions/messageActions";
 import { truncateString } from "@/lib/util";
 import PresenceAvatar from "@/components/PresenceAvatar";
+import MessagesTableCell from "./MessagesTableCell";
 
 type Props = {
   messages: MessageDto[];
@@ -66,41 +67,6 @@ export default function MessagesTable({ messages }: Props) {
     router.push(url + "/chat");
   };
 
-  const renderCell = useCallback(
-    (item: MessageDto, columnKey: keyof MessageDto) => {
-      const cellValue = item[columnKey];
-      switch (columnKey) {
-        case "recipientName":
-        case "senderName":
-          return (
-            <div className="flex items-center gap-2 cursor-pointer">
-              <PresenceAvatar
-                userId={isOutbox ? item.recipientId : item.senderId}
-                src={isOutbox ? item.recipientImage : item.senderImage}
-              />
-              <span>{cellValue}</span>
-            </div>
-          );
-        case "text":
-          return <div>{truncateString(cellValue, 80)}</div>;
-        case "created":
-          return cellValue;
-        default:
-          return (
-            <Button
-              isIconOnly
-              variant="light"
-              onClick={() => handleDeleteMessage(item)}
-              isLoading={isDeleting.id === item.id && isDeleting.loading}
-            >
-              <AiFillDelete size={24} className="text-danger" />
-            </Button>
-          );
-      }
-    },
-    [isOutbox, isDeleting.id, isDeleting.loading, handleDeleteMessage]
-  );
-
   return (
     <Card className="flex flex-col gap-3 h-[80vh] overflow-auto">
       <Table
@@ -131,7 +97,13 @@ export default function MessagesTable({ messages }: Props) {
                     !item.dateRead && !isOutbox ? "font-semibold" : ""
                   }`}
                 >
-                  {renderCell(item, columnKey as keyof MessageDto)}
+                  <MessagesTableCell
+                    item={item}
+                    columnKey={columnKey as string}
+                    isOutbox={isOutbox}
+                    deleteMessage={handleDeleteMessage}
+                    isDeleting={isDeleting.loading && isDeleting.id === item.id}
+                  />
                 </TableCell>
               )}
             </TableRow>
