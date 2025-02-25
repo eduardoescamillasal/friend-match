@@ -3,8 +3,8 @@
 import { MessageDto } from "@/types";
 import React, { useEffect, useRef } from "react";
 import clsx from "clsx";
-import { Avatar } from "@heroui/react";
 import { timeAgo, transformImageUrl } from "@/lib/util";
+import PresenceAvatar from "@/components/PresenceAvatar";
 
 type Props = {
   message: MessageDto;
@@ -21,11 +21,12 @@ export default function MessageBox({ message, currentUserId }: Props) {
   }, [messageEndRef]);
 
   const renderAvatar = () => (
-    <Avatar
-      name={message.senderName}
-      className="self-end"
-      src={transformImageUrl(message.senderImage) || "/images/user.png"}
-    />
+    <div className="self-end">
+      <PresenceAvatar
+        userId={message.senderId}
+        src={transformImageUrl(message.senderImage) || "/images/user.png"}
+      />
+    </div>
   );
 
   const messageContentClasses = clsx("flex flex-col w-[50%] px-2 py-1", {
